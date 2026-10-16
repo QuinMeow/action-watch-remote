@@ -1,0 +1,33 @@
+PASS official fixed CRC16 vector
+PASS official fixed CRC32 vector
+PASS fixed frame byte exact
+PASS bytewise fragmentation
+PASS coalesced frames
+PASS corrupt payload rejected
+PASS resync after corrupt payload
+PASS corrupt header rejected
+PASS resync after corrupt header
+PASS partial frame timeout
+PASS recovery after timeout
+PASS sequence wraps uint16
+PASS ACK matches sequence and command
+PASS command is not ACK
+PASS exact timeout deadline
+PASS pair handshake and subscription
+PASS pair response echoes camera sequence
+PASS duplicate click blocked
+PASS record uses raw camera ID and start=0
+PASS wrong-sequence ACK ignored
+PASS ACK alone does not claim recording
+PASS status confirms recording
+PASS stop byte is one
+PASS record timeout disables uncertain control
+PASS fresh status recovers timeout
+PASS photo activity not labelled recording
+PASS stale status disables buttons
+PASS camera rejection disconnects
+PASS pairing timeout disconnects
+PASS record failure ACK clears pending without success
+PASS reset clears stale display values
+PASS bounded random noise recovers to valid frame
+ALL 32 CHECKS PASSED
