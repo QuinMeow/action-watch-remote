@@ -31,3 +31,155 @@ PASS record failure ACK clears pending without success
 PASS reset clears stale display values
 PASS bounded random noise recovers to valid frame
 ALL 32 CHECKS PASSED
+PASS GPS payload is exactly 48 bytes
+PASS 48-byte fixture matches every field and little-endian offset
+PASS longitude precedes latitude with signed 1e7 scaling
+PASS negative MSL altitude remains signed millimeters
+PASS north east down velocities are float32 cm per second
+PASS provider accuracy and satellite fields have correct units and offsets
+PASS GPS payload wraps in CRC-valid command 0017
+PASS UTC+8 rolls calendar into next year
+PASS UTC+8 leap-day rollover
+PASS UTC+8 non-leap month rollover
+PASS subsecond timestamp truncates without next-day drift
+PASS UTC+8 midnight stays in 00 through 23 hour range
+PASS largest supported UTC+8 date is representable
+PASS reject date outside four-digit UTC+8 year
+PASS reject missing UTC time
+PASS fix is fresh at inclusive 2000 ms boundary
+PASS reject fix stale by one millisecond
+PASS reject future monotonic measurement time
+PASS reject negative current monotonic time
+PASS reject missing measurement elapsed time
+PASS reject absent location rather than create coordinates
+PASS large elapsed age cannot overflow to fresh
+PASS reject longitude over 180
+PASS reject latitude below minus 90
+PASS accept negative longitude endpoint without overflow
+PASS accept positive latitude endpoint without overflow
+PASS reject missing NaN field 0
+PASS reject nonfinite field 0
+PASS reject missing NaN field 1
+PASS reject nonfinite field 1
+PASS reject missing NaN field 2
+PASS reject nonfinite field 2
+PASS reject missing NaN field 3
+PASS reject nonfinite field 3
+PASS reject missing NaN field 4
+PASS reject nonfinite field 4
+PASS reject missing NaN field 5
+PASS reject nonfinite field 5
+PASS reject missing NaN field 6
+PASS reject nonfinite field 6
+PASS reject missing NaN field 7
+PASS reject nonfinite field 7
+PASS reject missing NaN field 8
+PASS reject nonfinite field 8
+PASS reject altitude integer overflow
+PASS reject velocity float overflow
+PASS reject negative accuracy field 6
+PASS reject negative accuracy field 7
+PASS reject negative accuracy field 8
+PASS reject accuracy uint32 overflow
+PASS accuracy retains complete unsigned 32-bit range
+PASS accuracy rounds conservatively upward instead of claiming zero uncertainty
+PASS reject missing satellite count
+PASS reject satellite uint32 overflow
+PASS disconnected camera drops GPS slot
+PASS busy link drops GPS slot
+PASS busy slot is not retained for immediate replay
+PASS fresh fix can be repeated in next slot
+PASS transport blocks intervals below 100 ms
+PASS repeated fix retains original timestamp and values
+PASS clock rollback cannot open a burst slot
+PASS 1000 polls produce at most ten transport packets per second
+PASS delayed scheduler sends one packet without catch-up burst
+PASS transport stops repeating as soon as fix is stale
+PASS transport does not send without a fix
+PASS missing downward velocity cannot become a fabricated zero
+PASS newest supplied fix replaces old data with no backlog
+PASS negative scheduler clock cannot send
+PASS fixed GPGGA checksum fixture extracts actual MSL altitude and satellites
+PASS GGA degree-minute coordinates retain real position
+PASS GNGGA fractional time and below-sea-level altitude accepted
+PASS GGA midnight has unambiguous zero time of day
+PASS reject non-GNSS GGA fix quality 0
+PASS reject non-GNSS GGA fix quality 6
+PASS reject non-GNSS GGA fix quality 7
+PASS reject non-GNSS GGA fix quality 8
+PASS reject non-GNSS GGA fix quality 9
+PASS reject non-GNSS GGA fix quality 
+PASS reject non-GNSS GGA fix quality -1
+PASS accept GNSS GGA fix quality 1
+PASS accept GNSS GGA fix quality 2
+PASS accept GNSS GGA fix quality 3
+PASS accept GNSS GGA fix quality 4
+PASS accept GNSS GGA fix quality 5
+PASS reject malformed hexadecimal checksum
+PASS reject checksum mismatch on modified measurement
+PASS GGA checksum is mandatory
+PASS empty GGA altitude stays missing rather than shifting fields
+PASS reject invalid GGA altitude NaN
+PASS reject invalid GGA altitude Infinity
+PASS reject invalid GGA altitude 1e3
+PASS reject invalid GGA altitude 2147483.648
+PASS reject non-meter GGA altitude
+PASS positive GGA fix quality requires actual satellites
+PASS reject malformed GGA time 240000
+PASS reject malformed GGA time 126000
+PASS reject malformed GGA time 125960
+PASS reject malformed GGA time 12351
+PASS reject malformed GGA time 123519.
+PASS reject malformed GGA time NaN
+PASS reject GGA latitude minutes above 59
+PASS reject GGA latitude beyond pole
+PASS reject invalid GGA hemisphere
+PASS other sentence types cannot masquerade as GGA
+PASS absent and oversized NMEA input rejected
+PASS bounded malformed NMEA fuzz input never throws
+ALL 106 GPS CHECKS PASSED
+LOCAL JVM SIMULATION: fake camera + synthetic GPS only; no Android UI, BLE or real location.
+PASS SIM fake pairing through actual frame decoder
+PASS SIM mode remains old before ACK
+PASS SIM successful mode ACK is not confirmation
+PASS SIM state push confirms photo mode
+PASS SIM photo mode does not enable record button
+PASS SIM duplicate mode requests blocked
+PASS SIM record blocked while mode pending
+PASS SIM video mode confirmed
+PASS SIM rejected mode does not change real mode
+PASS SIM ACK-only stays pending
+PASS SIM ACK-only mode times out without false success
+PASS SIM fresh status restores actual old mode
+PASS SIM wrong-sequence mode ACK ignored
+PASS SIM same-mode no-op
+PASS SIM unsupported mode no-op
+PASS SIM fake recording confirmed by state
+PASS SIM mode change blocked during recording
+PASS SIM fake stop confirmed by state
+PASS SIM GPS frame accepted in connected idle state 0
+PASS SIM GPS frame accepted in connected idle state 1
+PASS SIM GPS frame accepted in connected idle state 2
+PASS SIM GPS frame accepted in connected idle state 3
+PASS SIM GPS frame accepted in connected idle state 4
+PASS SIM GPS frame accepted in connected idle state 5
+PASS SIM GPS frame accepted in connected idle state 6
+PASS SIM GPS frame accepted in connected idle state 7
+PASS SIM GPS frame accepted in connected idle state 8
+PASS SIM GPS frame accepted in connected idle state 9
+PASS SIM 1Hz synthetic sample sends 10 transport frames in one second
+PASS SIM congested GPS slot dropped, not queued
+PASS SIM stale synthetic fix not sent
+PASS SIM stale camera state blocks GPS
+PASS SIM lost fake status disconnects
+PASS SIM first vertical sample cannot fabricate zero
+PASS SIM 10Hz second sample waits for baseline
+PASS SIM 10Hz accumulated baseline calculates downward speed
+PASS SIM 10Hz next sample retains valid recent derivative
+PASS SIM 10Hz following baseline updates derivative
+PASS SIM long GPS gap resets vertical estimate
+PASS SIM stopped GPS resets derivative
+PASS SIM GGA matches fractional UTC and coordinates
+PASS SIM different 10Hz sample in same second rejected
+PASS SIM different GGA position rejected
+ALL 43 SIMULATION CHECKS PASSED

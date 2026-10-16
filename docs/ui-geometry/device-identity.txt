@@ -1,0 +1,5 @@
+1
+Physical size: 378x496
+Physical density: 240
+Override density: 320
+bf6f822d5f987e31ec5b3e5f5ce13a5d96b3ba5409c6d16646681fdb376e153d  /data/app/~~2DVEjmmvmsdoRAPiQt9nxg==/dev.actionwatch.remote-kk2hGbk4tTCg7OtD3J5dtA==/base.apk

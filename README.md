@@ -1,32 +1,43 @@
-# Action 手表遥控 0.1 原型
+# Action 手表遥控 0.2 原型
 
-为 OPPO Watch 4 Pro + DJI Osmo Action 5 Pro 编写的普通 Android BLE 遥控原型。**没有真实手表或相机测试，不保证可安装、可配对或可录像。** 可审查源码，并用空白测试片验证后再考虑使用；不要用在重要拍摄、危险运动或不能失误的场景。
+为 OPPO Watch 4 Pro + DJI Osmo Action 5 Pro 编写的普通 Android BLE 遥控原型。**还没有真实手表/相机验证，不保证可安装、可配对、可控制或能向素材写入GPS。** 不用于重要拍摄或危险运动。
 
-## 当前功能
-- 前台扫描 BLE 设备，由用户选择；校验 FFF0/FFF4/FFF5 服务
-- R SDK 0xAA 帧、CRC16/CRC32、分片重组、损坏包恢复
-- 相机端确认配对码；拒绝后断开，不自动反复配对
-- 相机状态订阅及电量、模式、时长显示
-- 大按钮开始/停止录像；重复点击锁定；只有新鲜相机状态确认才显示录像中
-- 超时/断连/权限撤回反馈。离开应用即断开，**不会自动停止相机录像**
+## 功能
+- 前台BLE扫描与相机端确认配对，开始/停止录像
+- 模式切换：普通录像、慢动作、延时摄影、拍照、运动延时、低光视频（相机可能拒绝不支持的模式）
+- 只有相机状态推送确认后才显示录像/模式改变；ACK不冒充执行成功
+- 真实GPS开关：按需请求精确定位，实时读取GPS_PROVIDER + GGA NMEA，不读缓存旧位置、不默认开启
+- GPS向当前相机发送位置/时间/高度/速度等，不上传互联网；无完整定位/旧fix/休眠/断连时停止发送
+- 10Hz是发送上限，不等于真实GPS采样达到10Hz；新鲜样本可重复发送，保持原始测量时间，无插值/假定位
+- 明确隔离的本机模拟：自写假相机、人工GPS坐标、拒绝/错误SEQ/仅ACK/丢包/暂停状态与GPS的可控注入
 
-没有实时画面、模式切换、GPS发送、唤醒、后台自动录像、云上传、账号或联网权限。不依赖 Wear OS 或 Google Play Services，无原生 ABI 依赖。Android minSdk 26，target/compileSdk 35。
+不做Wi-Fi实时监看，不用账号、GMS、Wear OS、后台服务或网络权限。离开应用即停止GPS并断开，**不会自动停止相机正在进行的录像**。
 
-## 最重要的未验证项
-1. Android 普通应用不能读取本机真实蓝牙 MAC。本原型把安装时生成并保存在本机的随机标识放入配对身份字段。这不是已证实的 DJI 兼容方案，**可能使配对失败**；不会读取/伪装为其他设备的身份。卸载会丢失标识。
-2. 官方示例对 device_id 的常量/字节序存在不一致。本原型保留相机主动 0019 消息的四个原始字节用于控制，**这属于需硬件核实的实现选择，不是文档保证**。
-3. FFF5 无响应写的回调、MTU、分片和配对流程必须在 OPPO 系统与具体相机固件上验证。
-4. 未测试屏幕渲染、系统安装限制、手表省电策略和相机休眠。
+## 三种验证不能混淆
+1. JVM协议/状态机模拟：运行生产协议、会话、GPS编码，对接我们自写的假相机。不是DJI官方相机模拟器，也不是Android UI
+2. Android模拟器：运行实际APK和界面（本次实际结果见 docs/BUILD-RESULTS.md）；没有模拟出真实相机BLE或手表GPS
+3. 真机：OPPO手表、DJI相机、固件、真实GPS、Mimo素材GPS记录均待设备就位后验证
 
-## 使用与开发
-- 安装和真机核对：[docs/INSTALL-TEST-ZH.md](docs/INSTALL-TEST-ZH.md)
-- 协议选择和来源：[docs/PROTOCOL.md](docs/PROTOCOL.md)
-- 许可边界：[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)
-- 测试记录：[docs/JVM-TEST-RESULTS.txt](docs/JVM-TEST-RESULTS.txt)
+官方仓库有帧检查、连接帧构造及需ESP32/BLE的GPS回放示例，没有找到完整软件相机模拟器。我们生成的模式/GPS帧可用官方工具交叉校验，结果见 docs/OFFICIAL-FRAME-CHECK.txt。
 
-JDK17+ 执行 `./test.sh`，无需 Android SDK。Android 项目用 Gradle8.9、AGP8.7.3、Android SDK35；安装构建工具前须接受工具自身许可。设置 ANDROID_HOME 后运行 `./gradlew :app:assembleDebug :app:lintDebug`。本项目不提交SDK、完整Gradle发行版或私人调试密钥；附官方Gradle Wrapper与校验值。
+## 关键限制
+- Android普通APP不能读取真实本机蓝牙MAC，配对身份使用持久化随机标识，能否被相机接受待验证
+- 官方示例device_id常量/字节序有不一致，本原型使用相机握手回传的原始四字节控制，需硬件验证
+- GPS必须同时获得真实、非mock的Android定位和GPGGA/GNGGA NMEA。没有NMEA、速度或精度字段时宁可不发，不以0伪装缺失字段
+- GGA提供MSL高度；Android椭球高没有冒充MSL。垂直速度由真实MSL高度差分估算，有噪声；Android垂直精度只作为接收机不确定性估计，非已验证的MSL误差界
+- 日期时间采用完整UTC+8换算并跨日归一；官方样例直接hour+8存在跨日歧义，真实相机时间语义仍待核实
+- 前台应用保持屏幕亮起，真实功耗尚未测试，并非已优化的长续航方案。普通APK能否在OPPO固件侧载、GATT分片/UI及所有功能均须真机测试
 
-自写源代码采用 MIT；DJI 协议资料、品牌和相关条款不因此被重新许可。本项目非 DJI 或 OPPO 官方产品。
+## 开发与复现
+JDK17+：`./test.sh`。运行基础协议、GPS、模拟联调三组测试。
+Android：minSdk26、target/compileSdk35、Gradle8.9、AGP8.7.3；设置JAVA_HOME和ANDROID_HOME，运行 `./gradlew :app:assembleDebug :app:lintDebug`。Wrapper校验值固定；SDK/完整Gradle/JDK/缓存/密钥不随源码交付。
 
-## 范围说明
-按本次需求，不做 Wi-Fi 实时监看，以免增加手表耗电。官方 R SDK 另有模式切换和 GPS 数据推送能力，但本版未实现；不能从“能读取状态”推断任意画质、ISO 或帧率参数可写。后续功能需要单独确定需求并验证。
+- [安装与真机测试](docs/INSTALL-TEST-ZH.md)
+- [本机模拟指南及视频](docs/SIMULATION-ZH.md)
+- [Android小屏实际验收](docs/EMULATOR-REPORT.md)
+- [协议选择与来源](docs/PROTOCOL.md)
+- [许可边界](THIRD-PARTY-NOTICES.md)
+
+自写内容MIT；官方协议资料及相关条款并未被重新许可。非DJI或OPPO官方产品。
+
+- [Android 模拟器验收报告与录屏](docs/EMULATOR-REPORT.md)

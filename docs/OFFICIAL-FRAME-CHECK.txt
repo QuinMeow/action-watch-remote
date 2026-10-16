@@ -1,0 +1,102 @@
+Official DJI frame-check cross-validation
+Source: https://github.com/dji-sdk/Osmo-GPS-Controller-Demo
+Commit: 92fe23e5a749f189593f980a26a105c3bb66aa1c
+Checked at: 2026-10-16T08:38:29.632359+00:00
+Scope: structural length and CRC validation only; does not establish camera acceptance, device-ID semantics, timezone interpretation, BLE interoperability, or Mimo metadata correctness. Synthetic coordinates only.
+Official sources compiled locally; no official source copied into app deliverable.
+
+Build command: make -B
+gcc -Wall -Wextra -std=c99 -O2 -I../../utils/crc -I../../protocol -o frame_check frame_check.c ../../utils/crc/custom_crc16.c ../../utils/crc/custom_crc32.c
+
+
+Build exit code: 0
+
+Mode 1D04
+Input: AA 1B 00 01 00 00 00 00 03 00 54 4E 1D 04 44 FF 00 00 05 00 00 00 00 EC C5 5A 61
+=== DJI Protocol Frame Checker ===
+
+=== Testing Frame 1 ===
+Input: AA 1B 00 01 00 00 00 00 03 00 54 4E 1D 04 44 FF 00 00 05 00 00 00 00 EC C5 5A 61
+
+Total parsed: 27 bytes
+
+Frame Data (27 bytes): AA 1B 00 01 00 00 00 00 03 00 54 4E 1D 04 44 FF 
+                        00 00 05 00 00 00 00 EC C5 5A 61
+
+Frame Structure Analysis:
+  SOF:        0xAA
+  Ver/Length: 0x001B (Version: 0, Length: 27)
+  CmdType:    0x01
+  ENC:        0x00
+  RES:        0x00 0x00 0x00
+  SEQ:        0x0003 (3)
+  CRC-16:     0x4E54
+  Data:       1D 04 44 FF 00 00 05 00 00 00 00 (11 bytes, auto-detected)
+  CRC-32:     0x615AC5EC (from last 4 bytes: 23-26)
+
+=== Frame Validation ===
+✅ SOF valid: 0xAA
+✅ Frame length valid: 27 bytes
+CRC-16 calculation bytes (0-9): AA 1B 00 01 00 00 00 00 03 00
+✅ CRC-16 valid: 0x4E54
+CRC-32 calculation bytes (0-22): AA 1B 00 01 00 00 00 00 03 00 54 4E 1D 04 44 FF 
+                                  00 00 05 00 00 00 00
+✅ CRC-32 valid: 0x615AC5EC
+
+=== Validation Summary ===
+🎉 Frame is VALID - All checks passed!
+
+
+================================================
+
+
+Tool exit code: 0
+
+GPS 0017
+Input: AA 42 00 00 00 00 00 00 13 00 DF 1D 00 17 15 4C 35 01 00 00 00 00 70 DB 5F 45 30 53 C9 17 50 C3 00 00 00 00 C8 42 00 00 00 00 00 00 48 C2 B8 0B 00 00 A0 0F 00 00 32 00 00 00 0C 00 00 00 7D 32 69 47
+=== DJI Protocol Frame Checker ===
+
+=== Testing Frame 1 ===
+Input: AA 42 00 00 00 00 00 00 13 00 DF 1D 00 17 15 4C 35 01 00 00 00 00 70 DB 5F 45 30 53 C9 17 50 C3 00 00 00 00 C8 42 00 00 00 00 00 00 48 C2 B8 0B 00 00 A0 0F 00 00 32 00 00 00 0C 00 00 00 7D 32 69 47
+
+Total parsed: 66 bytes
+
+Frame Data (66 bytes): AA 42 00 00 00 00 00 00 13 00 DF 1D 00 17 15 4C 
+                        35 01 00 00 00 00 70 DB 5F 45 30 53 C9 17 50 C3 
+                        00 00 00 00 C8 42 00 00 00 00 00 00 48 C2 B8 0B 
+                        00 00 A0 0F 00 00 32 00 00 00 0C 00 00 00 7D 32 
+                        69 47
+
+Frame Structure Analysis:
+  SOF:        0xAA
+  Ver/Length: 0x0042 (Version: 0, Length: 66)
+  CmdType:    0x00
+  ENC:        0x00
+  RES:        0x00 0x00 0x00
+  SEQ:        0x0013 (19)
+  CRC-16:     0x1DDF
+  Data:       00 17 15 4C 35 01 00 00 00 00 70 DB 5F 45 30 53 
+              C9 17 50 C3 00 00 00 00 C8 42 00 00 00 00 00 00 
+              48 C2 B8 0B 00 00 A0 0F 00 00 32 00 00 00 0C 00 
+              00 00 (50 bytes, auto-detected)
+  CRC-32:     0x4769327D (from last 4 bytes: 62-65)
+
+=== Frame Validation ===
+✅ SOF valid: 0xAA
+✅ Frame length valid: 66 bytes
+CRC-16 calculation bytes (0-9): AA 42 00 00 00 00 00 00 13 00
+✅ CRC-16 valid: 0x1DDF
+CRC-32 calculation bytes (0-61): AA 42 00 00 00 00 00 00 13 00 DF 1D 00 17 15 4C 
+                                  35 01 00 00 00 00 70 DB 5F 45 30 53 C9 17 50 C3 
+                                  00 00 00 00 C8 42 00 00 00 00 00 00 48 C2 B8 0B 
+                                  00 00 A0 0F 00 00 32 00 00 00 0C 00 00 00
+✅ CRC-32 valid: 0x4769327D
+
+=== Validation Summary ===
+🎉 Frame is VALID - All checks passed!
+
+
+================================================
+
+
+Tool exit code: 0

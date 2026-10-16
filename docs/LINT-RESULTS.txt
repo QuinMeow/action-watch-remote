@@ -19,4 +19,21 @@ PROJECT/app/src/main/AndroidManifest.xml:7: Warning: Attribute usesPermissionFla
    can be unused too, such as the new <tag> element in layouts introduced in
    API 21.
 
-0 errors, 1 warnings
+PROJECT/app/src/main/java/dev/actionwatch/remote/MainActivity.java:118: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+  status.setText((fake!=null?"模拟设备 · ":"")+session.message);record.setEnabled(session.canRecord(now()));record.setText(session.pendingRecord?"等待相机确认…":session.recording()?"停止录像":"开始录像");record.setContentDescription(record.getText());scan.setEnabled(!scanning&&!connecting&&gatt==null&&fake==null);disconnect.setEnabled(scanning||connecting||gatt!=null||fake!=null);
+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "SetTextI18n":
+   When calling TextView#setText
+   * Never call Number#toString() to format numbers; it will not handle
+   fraction separators and locale-specific digits properly. Consider using
+   String#format with proper format specifications (%d or %f) instead.
+   * Do not pass a string literal (e.g. "Hello") to display text. Hardcoded
+   text can not be properly translated to other languages. Consider using
+   Android resource strings instead.
+   * Do not build messages by concatenating text chunks. Such messages can not
+   be properly translated.
+
+   https://developer.android.com/guide/topics/resources/localization.html
+
+0 errors, 2 warnings

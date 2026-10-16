@@ -1,29 +1,29 @@
-# 构建与验证记录
+# 0.2 构建与验证记录
 
-日期：2026-10-16 UTC
+日期：2026-10-16 UTC。候选APK versionCode2 / versionName0.2-prototype。
 
-## 通过
-- JDK17 纯JVM协议/状态机检查：32/32
-- 官方 Android35 android.jar 直接Java编译
-- Gradle8.9 + Android Gradle Plugin8.7.3：assembleDebug
-- Android lintDebug：0错误（警告详情见 LINT-RESULTS.txt）
-- 最终调试 APK 签名验证，Android API26–35包信息检查
-- XML格式检查；独立源码审查后修复扫描回调、撤权清理、无障碍、状态重置及系统栏布局
+## 已通过
+- JDK17聚合检查181/181：32基础协议、106GPS编码/校验、43假相机与状态机联调
+- 独立复核者重跑同一聚合脚本181/181，模式确认、模拟隔离、GPS隐私/生命周期和背压审查无剩余阻断
+- 发现并修复：10Hz样本导致高度差分永不成功；Location先于NMEA导致永远缺GPS。回调双向匹配、测量时间去重、200ms高度基准的实现已复核
+- Android35编译、Gradle assembleDebug、lintDebug通过
+- DJI官方frame_check工具交叉检查模式与GPS帧，SOF/长度/CRC16/CRC32均通过，见OFFICIAL-FRAME-CHECK.txt
+- APK v2签名验证通过；与0.1相同签名证书，versionCode升为2
+- Lint：0错误、2警告。1条API31蓝牙属性对低API忽略的预期提示；1条中文原型文本拼接的国际化提示。不是运行成功证明
 
-## 不代表通过
-- 未运行Android模拟器或实际屏幕UI，没有设备截图
-- 未安装到OPPO Watch 4 Pro
-- 未连接Action5 Pro，未验证配对身份、真实BLE写入、相机启停
-- 未测试设备休眠/断连/温度/满卡/电量/厂商权限管理
+## Android模拟器
+实际Android11/API30 AOSP软件模拟器在无KVM的云环境运行最终APK，378×496像素。240dpi已跑通模拟连接、录像/停止、模式菜单滚动与切换、模拟GPS、断开重连、Home返回清理、定位权限拒绝。完整录屏约8分56秒，未加速或裁切；320dpi压力验证也通过模式列表末项、低光状态确认、GPS及断开入口滚动可达。独立视觉审查通过；普通按钮48dp、录像64dp。精确配置及几何记录见EMULATOR-REPORT.md。
 
-当前云环境没有模拟器、KVM或已连接ADB设备。APK可构建与签名有效并不保证手表允许安装，也不证明相机兼容。
+## 未验证
+- OPPO Watch 4 Pro安装、蓝牙栈、权限与真实屏幕
+- Action5 Pro配对身份、device_id选择、实际模式/录像执行
+- 手表是否提供完整GPS/GGA/速度精度、真实采样率与功耗
+- 相机是否接收并写入GPS、UTC+8实际解释、Mimo素材呈现
+- 真实睡眠/远距离/满卡/过热/低电量
 
-## 构建环境
-- AWS Corretto JDK17（官方发行，SHA256验证）
-- 官方 Gradle8.9，Wrapper固定发行包SHA256
-- Google官方SDK Platform35、Build Tools34
-- Android SDK条款在用户明确同意后接受：https://developer.android.com/studio#terms
+JVM假相机不是Android UI，Android模拟器也不是手表/相机。仅源码/帧校验不能证明真实设备兼容。
 
-源码复现：设置本地JAVA_HOME、ANDROID_HOME，在项目目录执行 `./test.sh` 和 `./gradlew :app:assembleDebug :app:lintDebug`。首次需网络下载工具/依赖及适用许可接受。不包含云机器配置、SDK、缓存、local.properties或调试密钥。
+## 工具
+JDK17 AWS Corretto，Gradle8.9，AGP8.7.3，Google SDK Platform35 / Build Tools34。工具来自官方来源；Android SDK条款已由用户明确同意：https://developer.android.com/studio#terms
 
-APK为开发用调试签名，不是Google Play发行包；密钥未附在交付包。它不含网络权限或后台服务。Gradle Wrapper自身是附许可的官方第三方构建组件。
+复现：设置JAVA_HOME/ANDROID_HOME，运行 `./test.sh` 和 `./gradlew :app:assembleDebug :app:lintDebug`。本次无GitHub发布动作由此工程任务执行；源码同步由主任务在最终验证之后管理。
