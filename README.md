@@ -1,6 +1,10 @@
-# Action 手表遥控 0.2 原型
+# Action 手表遥控 0.3 原型
 
 为 OPPO Watch 4 Pro + DJI Osmo Action 5 Pro 编写的普通 Android BLE 遥控原型。**还没有真实手表/相机验证，不保证可安装、可配对、可控制或能向素材写入GPS。** 不用于重要拍摄或危险运动。
+
+## 0.3 界面
+
+采用用户选定的琥珀方案：黑底、25sp模式标题、88dp录像按钮；主按钮由70dp设计基线增加约25%。GPS和模式使用独立页面，普通入口仅连接真实相机。Debug默认隐藏，通过设置→关于→版本号连续点击7次临时开启；退出应用恢复隐藏。
 
 ## 功能
 - 前台BLE扫描与相机端确认配对，开始/停止录像
@@ -34,10 +38,8 @@ Android：minSdk26、target/compileSdk35、Gradle8.9、AGP8.7.3；设置JAVA_HOM
 
 - [安装与真机测试](docs/INSTALL-TEST-ZH.md)
 - [本机模拟指南及视频](docs/SIMULATION-ZH.md)
-- [Android小屏实际验收](docs/EMULATOR-REPORT.md)
+- [Android小屏实际验收](docs/ui-v03/REPORT.md)
 - [协议选择与来源](docs/PROTOCOL.md)
 - [许可边界](THIRD-PARTY-NOTICES.md)
 
 自写内容MIT；官方协议资料及相关条款并未被重新许可。非DJI或OPPO官方产品。
-
-- [Android 模拟器验收报告与录屏](docs/EMULATOR-REPORT.md)

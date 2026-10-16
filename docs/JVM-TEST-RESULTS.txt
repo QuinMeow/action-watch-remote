@@ -183,3 +183,4 @@ PASS SIM GGA matches fractional UTC and coordinates
 PASS SIM different 10Hz sample in same second rejected
 PASS SIM different GGA position rejected
 ALL 43 SIMULATION CHECKS PASSED
+ALL 18 DEBUG GATE CHECKS PASSED

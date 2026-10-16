@@ -15,3 +15,7 @@ https://github.com/dji-sdk/Osmo-GPS-Controller-Demo/blob/main/LICENSE
 Android 平台及构建工具、Gradle、Android Gradle Plugin、JDK 有各自许可。它们不是本项目 MIT 许可对象。构建使用 Google 官方 SDK（本次用户已同意其工具条款），Gradle 官方发行版、AWS Corretto JDK17；源码包不包含SDK、JDK或完整Gradle发行版；仅附官方Gradle8.9 Wrapper及其脚本，采用Apache-2.0，原许可与NOTICE保存在licenses/。Wrapper未改动，下载分发包的SHA256已固定。应用不引用第三方 Android UI 或 BLE 库。
 
 DJI、Osmo、OPPO 等名称和商标归各自权利人所有；本原型没有官方合作、认证或支持承诺。
+
+## Material Icons（0.3起）
+
+设置、定位、箭头、录制及停止图标来自Google官方Material Icons，Apache-2.0许可。由SVG机械转换为Android VectorDrawable，几何路径未改，填充色改为运行时tint。逐文件来源见licenses/Material-Icons-SOURCES.md，完整许可见licenses/Material-Icons-LICENSE.txt。这些资源不适用本项目MIT许可。
